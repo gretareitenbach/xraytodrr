@@ -217,6 +217,9 @@ python evaluation.py \
     --gt_name ground_truth_xray.png \
     --output_name p9_comparison.png
 ```
+
+<img width="5117" height="4188" alt="comparison_plot" src="https://github.com/user-attachments/assets/16d40e56-8266-4473-93b4-dc9bff8b2317" />
+
 -----
 
 # Utility Scripts
