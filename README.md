@@ -283,6 +283,8 @@ python visualize_3d_drr.py \
     --output_dir /path/to/your/3d_viz_folder
 ```
 
+<img width="1024" height="768" alt="3d_render" src="https://github.com/user-attachments/assets/9054b8c0-2ad4-4fdc-88aa-eb19b126c29d" />
+
 -----
 
 ### Animate 2D Registration
@@ -293,6 +295,8 @@ python visualize_3d_drr.py \
 
 **Usage**:
 Provide the CT volume, the parameters file containing the registration trajectory, and an output path for the GIF.
+
+![2d_animation](https://github.com/user-attachments/assets/4e008061-4be0-4bf9-8546-9945a35a8f22)
 
 ```bash
 python animate_2d_pose.py \
