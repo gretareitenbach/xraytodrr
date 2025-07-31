@@ -1,6 +1,6 @@
 # 2D-3D X-Ray Registration Pipeline
 
-This repository provides a set of tools and a complete workflow to preprocess 3D CT scans and their corresponding segmentations. The primary goal is to prepare medical imaging data for advanced analysis, such as diffeomorphic registration and pose estimation, using the libraries [XVR](https://github.com/eigenvivek/xvr) and [DiffDRR](https://github.com/eigenvivek/DiffDRR) by Vivek Gopalakrishnan (`eigenvivek`).
+This repository uses the libraries [XVR](https://github.com/eigenvivek/xvr) and [DiffDRR](https://github.com/eigenvivek/DiffDRR) by Vivek Gopalakrishnan (`eigenvivek`).
 
 ## Preprocessing
 
