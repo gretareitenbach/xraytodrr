@@ -4,6 +4,16 @@ from pathlib import Path
 from xvr.renderer import initialize_drr
 from diffdrr.visualization import animate
 
+'''
+Usage:
+
+python animate_2d_pose.py \
+    --volume /path/to/your/ct_scan.nii.gz \
+    --parameters /path/to/registration_output/final_pose.pt \
+    --output_path /path/to/save/registration_animation.gif
+    
+'''
+
 def main():
     """
     Creates an animated GIF of a 2D registration process from a volume
