@@ -1,6 +1,6 @@
 # 2D-3D X-Ray Registration Pipeline
 
-This repository uses the libraries [XVR](https://github.com/eigenvivek/xvr) and [DiffDRR](https://github.com/eigenvivek/DiffDRR) by Vivek Gopalakrishnan (`eigenvivek`).
+This workflow uses the libraries [XVR](https://github.com/eigenvivek/xvr) and [DiffDRR](https://github.com/eigenvivek/DiffDRR) by Vivek Gopalakrishnan (`eigenvivek`).
 
 ## Preprocessing
 
