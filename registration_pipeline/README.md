@@ -101,7 +101,7 @@ python coregister_cts.py \
 
 -----
 
-## Model Training
+## Training
 
 First, a general **agnostic model** is trained on the entire dataset. Then, this model is **finetuned** for each individual patient to create a specialized model.
 
@@ -142,6 +142,8 @@ python finetuned.py \
 -----
 
 ## Registration
+
+**Note:** Ensure your 2D X-ray has been prepared according to the steps outlined in the `xray_preprocessing.md` guide before proceeding.
 
 ### Step 7: Register X-ray to CT with Patient-Specific Model
 
