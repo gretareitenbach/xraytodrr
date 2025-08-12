@@ -9,7 +9,8 @@ python registration.py \
     /path/to/your/xray.png \
     -v /path/to/your/volume.nii.gz \
     -c /path/to/your/model.pth \
-    -o /path/to/your/output_folder
+    -o /path/to/your/output_folder \
+    --mask /path/to/your/mask.nii.gz \
 
 '''
 
@@ -20,15 +21,13 @@ def main():
     parser = argparse.ArgumentParser(
         description="Register a CT volume to an X-ray using a trained XVR model."
     )
-    
-    # Positional argument for the X-ray
+
     parser.add_argument(
         "xray",
         type=str,
         help="Path to the target X-ray or DRR image file."
     )
-    
-    # Optional arguments with flags
+
     parser.add_argument(
         "-v", "--volume",
         type=str,
@@ -47,6 +46,12 @@ def main():
         required=True,
         help="Directory to save the registration results and output images."
     )
+    parser.add_argument(
+        "--mask",
+        type=str,
+        default=None,
+        help="Path to the mask file (optional)."
+    )
     
     args = parser.parse_args()
 
@@ -61,6 +66,8 @@ def main():
         --saveimg \
         --reverse_x_axis \
         --verbose 2 \
+        --mask {Path(args.mask)} \
+        --labels "1" \
     """
     command = command.strip().split()
     run(command, check=True)
