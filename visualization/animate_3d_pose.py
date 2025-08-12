@@ -11,9 +11,17 @@ from pathlib import Path
 from tqdm import tqdm
 from xvr.renderer import initialize_drr
 
+'''
+Usage:
+
+python animate_3d_pose.py \
+    --volume /path/to/your/volume.nii.gz \
+    --parameters /path/to/your/parameters.pt \
+    --output_path /path/to/your/3d_viz_folder
+    
+'''
 
 def main():
-
     parser = argparse.ArgumentParser(
         description="Generate a DRR from a CT volume and a pose file."
     )
@@ -116,4 +124,5 @@ def main():
     print(f"✅ Animation saved successfully to: {animation_path}")
 
 if __name__ == "__main__":
+
     main()
