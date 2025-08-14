@@ -46,7 +46,8 @@ def main():
     args = parser.parse_args()
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
+    pose = torch.load(args.pose_path, weights_only=False, map_location=device)
+
     # Image dimensions
     HEIGHT = pose["drr"]["height"]
     WIDTH = pose["drr"]["width"]
@@ -77,7 +78,7 @@ def main():
     
     # Load the final pose
     print(f"Loading pose from: {args.pose_path}")
-    final_pose = RigidTransform(torch.load(args.pose_path, weights_only=False, map_location=device)["final_pose"])
+    final_pose = RigidTransform(pose["final_pose"])
     print("Final pose loaded successfully.")
     
     # Generate DRR image
@@ -90,4 +91,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
