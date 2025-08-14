@@ -86,4 +86,4 @@ python add_dicom_data.py \
 
 -----
 
-The final, preprocessed DICOM file from this section is now ready to be used as the X-ray input for **Step 7: Register X-ray to CT with Patient-Specific Model** in the registration pipeline.
+The final, preprocessed DICOM file from this section is now ready to be used as the X-ray input for **Step 6: Register X-ray to CT with Patient-Specific Model** in the registration pipeline.

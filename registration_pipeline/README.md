@@ -4,62 +4,27 @@ This workflow uses the libraries [XVR](https://github.com/eigenvivek/xvr) and [D
 
 ## Preprocessing
 
-### Step 1: Clean Segmentation Masks
+The goal of preprocessing is to standardize all CT and X-ray data to ensure consistent inputs for the training and registration models.
 
-**Purpose:** Raw segmentation masks often contain small, disconnected "island" artifacts. This initial step cleans the masks by isolating only the **largest connected component** for each anatomical label. This ensures that each label represents a single, contiguous object.
+### Step 1: Prepare CT Scans (Automated)
 
-**Script:** `segmentation_preprocessing.py`
+**Purpose:** This unified script streamlines the entire CT preparation process. It takes a raw CT and its corresponding raw segmentation mask, cleans the mask by keeping only the largest connected components, and then uses the cleaned mask to crop out the specified bones (e.g., femur and tibia). It also automatically handles mirroring for right-sided anatomy.
+
+**Script:** `preprocessing/prepare_ct.py`
 
 **Usage:**
-Run the script from your terminal, providing the path to your input segmentation file and an output directory. You can optionally specify which labels to process.
+Run the script with the paths to your raw CT and segmentation files. It will create subdirectories for the cropped bones in your specified output directory.
 
-```bash
-With saved defaults:
-
-python segmentation_preprocessing.py \
-    -i /path/to/your/patientA_seg.nii.gz \
-    -o /path/to/your/processed_data
-
-With specified defaults:
-
-python segmentation_preprocessing.py \
-    -i /path/to/your/patientB_seg.nii.gz \
-    -o /path/to/your/processed_data \
-    -labels 1 2 3
+```
+python preprocessing/prepare_ct.py \
+    --raw_ct_path /path/to/patient/P01_ct.nii.gz \
+    --raw_seg_path /path/to/patient/P01_seg.nii.gz \
+    --output_dir /path/to/processed_data/P01/
 ```
 
 -----
 
-### Step 2: Crop CT Scans Based on Segmentation
-
-**Purpose:** To reduce file size and focus computational efforts, this step crops the large original CT volume to a smaller bounding box centered around the anatomy of interest (defined by the cleaned segmentation). A specified amount of padding is added around the bounding box. The script also handles mirroring for right-sided anatomy to a common (e.g., left-sided) orientation.
-
-**Script:** `crop_cts.py`
-
-**Usage:**
-This script requires the base directory, the original CT filename, and the cleaned segmentation filename from Step 1.
-
-```bash
-With saved defaults:
-
-python crop_cts.py \
-    --base_dir /path/to/patient/data \
-    --ct_filename P01_ct.nii.gz \
-    --seg_filename segmentations/P01_seg.nii.gz
-
-With specified defaults:
-
-python crop_cts.py \
-    --base_dir /path/to/patient/data \
-    --ct_filename P01_ct.nii.gz \
-    --seg_filename segmentations/P01_seg.nii.gz \
-    --labels 10 11 20 21 \
-    --padding 10.0
-```
-
------
-
-### Step 3: Co-Register Cropped CTs
+### Step 2: Co-Register Cropped CTs
 
 **Purpose:** After cropping, each CT scan exists in its own coordinate space. This step aligns, or **co-registers**, all cropped CT scans to a common orientation and position. One scan is chosen as a `reference` (or fixed) image, and all other scans are transformed to match it.
 
@@ -77,7 +42,7 @@ python coregister_cts.py \
 
 -----
 
-### Step 4: Center and Create Isometric Voxels (Manual)
+### Step 3: Center and Create Isometric Voxels (Manual)
 
 **Purpose:** The final step ensures that all images are centered in their image grid and that their voxels are **isometric** (i.e., have the same physical size in all dimensions, like 1mm x 1mm x 1mm).
 
@@ -105,7 +70,7 @@ python coregister_cts.py \
 
 First, a general **agnostic model** is trained on the entire dataset. Then, this model is **finetuned** for each individual patient to create a specialized model.
 
-### Step 5: Train the Agnostic Model
+### Step 4: Train the Agnostic Model
 
 **Purpose:** This phase creates a general model that learns the common anatomical features and variations from an entire collection of preprocessed CT scans. This agnostic model serves as a starting point for patient-specific finetuning.
 
@@ -123,7 +88,7 @@ python agnostic.py \
 
 -----
 
-### Step 6: Finetune a Patient-Specific Model
+### Step 5: Finetune a Patient-Specific Model
 
 **Purpose:** To achieve the highest accuracy for a specific patient, the general agnostic model is specialized using **finetuning**. This step creates a new model that is an expert on a single patient's bone anatomy.
 
@@ -145,22 +110,23 @@ python finetuned.py \
 
 **Note:** Ensure your 2D X-ray has been prepared according to the steps outlined in the `xray_preprocessing.md` guide before proceeding.
 
-### Step 7: Register X-ray to CT with Patient-Specific Model
+### Step 6: Register X-ray to CT with Patient-Specific Model and Create High-Quality DRR
 
-**Purpose:** This step uses the finetuned, patient-specific model to rapidly and accurately find the 3D pose that aligns the patient's CT scan with a given 2D X-ray. The script outputs the final parameters and trajectory and visualizes the alignment with DRRs.
+**Purpose:** This step uses the finetuned, patient-specific model to rapidly and accurately find the 3D pose that aligns the patient's CT scan with a given 2D X-ray. The script outputs the final parameters and trajectory and visualizes the alignment with DRRs. This script also allows you to generate a higher-fidelity DRR using the final pose for more precise visual verification or comparison.
 
 **Script:** `registration.py`
 
 **Usage:**
-Provide the path to the input X-ray, the corresponding patient's preprocessed CT volume, the finetuned model from Step 6, and an output directory.
+Provide the path to the input X-ray, the corresponding patient's preprocessed CT volume, the finetuned model from Step 6, and an output directory. Optionally, provide an output directory to save the high quality DRR.
 
 ```bash
 python registration.py \
-    /path/to/your/xray.dicom \
+    /path/to/your/xray.png \
     -v /path/to/your/volume.nii.gz \
     -c /path/to/your/model.pth \
     -o /path/to/your/output_folder \
-    --mask /path/to/ct/mask.nii.gz
+    --mask /path/to/your/mask.nii.gz \
+    --save_paired_drr /path/to/save/final_drr.png
 ```
 
 **Outputs:**
@@ -169,24 +135,6 @@ python registration.py \
   * `gt.png`: The original input X-ray.
   * `init_image.png`: A DRR generated from the initial guess of the pose.
   * `final_img.png`: A DRR generated from the final, optimized pose.
-
------
-
-### Step 8: Create a High-Quality DRR from Final Pose
-
-**Purpose:** The DRR generated during the registration process is optimized for speed. This script allows you to generate a higher-fidelity DRR using the final pose for more precise visual verification or comparison.
-
-**Script:** `create_drr.py`
-
-**Usage:**
-Use the CT volume and the `parameters.pt` file generated in the previous step to create a new DRR.
-
-```bash
-python create_drr.py \
-    --volume /path/to/your/ct_scan.nii.gz \
-    --pose_path /path/to/your/parameter_file.pt \
-    --output_path /path/to/save/your_drr.png
-```
 
 -----
 
