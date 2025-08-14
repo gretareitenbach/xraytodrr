@@ -15,6 +15,7 @@ python registration.py \
     -c /path/to/your/model.pth \
     -o /path/to/your/output_folder \
     --mask /path/to/your/mask.nii.gz \
+    --save_paired_drr /path/to/save/final_drr.png
 
 '''
 
