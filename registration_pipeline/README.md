@@ -156,7 +156,7 @@ Provide the path to the input X-ray, the corresponding patient's preprocessed CT
 
 ```bash
 python registration.py \
-    /path/to/your/xray.png \
+    /path/to/your/xray.dicom \
     -v /path/to/your/volume.nii.gz \
     -c /path/to/your/model.pth \
     -o /path/to/your/output_folder
