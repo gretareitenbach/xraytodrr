@@ -72,7 +72,7 @@ python coregister_xrays.py \
 
 **Purpose:** A crucial piece of metadata for accurate registration is the **Source-to-Detector Distance (SDD)**, which defines the geometry of the X-ray machine. This script embeds a specified SDD value directly into the DICOM file header.
 
-**Script:** `add_dicom_data.py`
+**Script:** `resources/add_dicom_data.py`
 
 **Usage:**
 Provide the input DICOM from Step 3, define an output path for the new file, and specify the SDD value.
