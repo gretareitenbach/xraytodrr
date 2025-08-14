@@ -48,10 +48,10 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     # Image dimensions
-    HEIGHT = 3362
-    WIDTH = 1038
-    DELX = 0.148
-    DELY = 0.148
+    HEIGHT = pose["drr"]["height"]
+    WIDTH = pose["drr"]["width"]
+    DELX = pose["drr"]["delx"]
+    DELY = pose["drr"]["dely"]
     
     # Create DRR object
     print(f"Initializing DRR with volume: {args.volume}")
@@ -90,3 +90,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
