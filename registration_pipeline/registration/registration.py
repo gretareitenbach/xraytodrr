@@ -26,11 +26,13 @@ def generate_final_drr(volume_path, pose_path, output_path, device):
     """
     print("\n--- Starting Final DRR Generation ---")
 
-    # Define DRR parameters (ensure these match your project's needs)
-    HEIGHT = 3362
-    WIDTH = 1038
-    DELX = 0.148
-    DELY = 0.148
+    pose = torch.load(pose_path, weights_only=False, map_location=device)
+
+    # Define DRR parameters
+    HEIGHT = pose["drr"]["height"]
+    WIDTH = pose["drr"]["width"]
+    DELX = pose["drr"]["delx"]
+    DELY = pose["drr"]["dely"]
     SDD = 1020.0
 
     # Initialize the DRR renderer from xvr
