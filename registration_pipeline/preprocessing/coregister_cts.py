@@ -6,11 +6,11 @@ from pathlib import Path
 '''
 Usage:
 
-python coregister_bones.py \
-    --input_dir /path/to/source_bones \
-    --output_dir /path/to/coregistered_bones \
-    --reference_file /path/to/source_bones/reference_scan.nii.gz
-
+python coregister_cts.py \
+    --input_dir /path/to/source_cts \
+    --output_dir /path/to/coregistered_cts \
+    --reference_file /path/to/source_cts/reference_scan.nii.gz
+    
 '''
 
 def get_physical_bounding_box_corners(image):
@@ -120,19 +120,19 @@ def main():
         "-i", "--input_dir",
         type=Path,
         required=True,
-        help="Input directory containing the CT or Xray scans (.nii.gz) to be registered."
+        help="Input directory containing the CT scans (.nii.gz) to be registered."
     )
     parser.add_argument(
         "-o", "--output_dir",
         type=Path,
         required=True,
-        help="Output directory to save the co-registered CT or Xray scans."
+        help="Output directory to save the co-registered CT scans."
     )
     parser.add_argument(
         "-r", "--reference_file",
         type=Path,
         required=True,
-        help="Path to the reference (fixed) CT or Xray scan for registration."
+        help="Path to the reference (fixed) CT scan for registration."
     )
     
     args = parser.parse_args()
