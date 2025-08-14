@@ -1,7 +1,3 @@
-Of course\! Here is the content of the `README.md` formatted for the chat.
-
------
-
 # X-Ray to DRR: A Deep Learning Pipeline for 2D/3D Medical Image Registration and Translation
 
 This repository contains a comprehensive, two-part deep learning pipeline designed to solve a critical challenge in medical imaging: the alignment of 2D X-ray images with 3D CT scans.
