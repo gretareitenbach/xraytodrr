@@ -159,7 +159,8 @@ python registration.py \
     /path/to/your/xray.dicom \
     -v /path/to/your/volume.nii.gz \
     -c /path/to/your/model.pth \
-    -o /path/to/your/output_folder
+    -o /path/to/your/output_folder \
+    --mask /path/to/ct/mask.nii.gz
 ```
 
 **Outputs:**
