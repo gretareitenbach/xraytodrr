@@ -35,10 +35,27 @@ python mirror_xrays.py \
     --input_path /path/to/cropped_xrays/ \
     --output_path /path/to/mirrored_xrays/
 ```
+-----
+
+### Step 3: Co-Register Cropped X-Rays
+
+**Purpose:** After cropping, each x-ray scan exists in its own coordinate space. This step aligns, or **co-registers**, all cropped x-ray scans to a common orientation and position. One scan is chosen as a `reference` (or fixed) image, and all other scans are transformed to match it.
+
+**Script:** `coregister_xrays.py`
+
+**Usage:**
+Provide the directory of cropped x-rays from Step 2, an output directory, and specify one of the scans to act as the reference.
+
+```bash
+python coregister_xrays.py \
+    --input_dir /path/to/source_xrays \
+    --output_dir /path/to/coregistered_xrays \
+    --reference_file /path/to/source_xrays/reference_scan.nii.gz
+```
 
 -----
 
-### Step 3: Convert to DICOM Format
+### Step 4: Convert to DICOM Format
 
 **Purpose:** The final steps of preprocessing require the image to be in DICOM format to store essential metadata in the file's header.
 
@@ -51,7 +68,7 @@ python mirror_xrays.py \
 
 -----
 
-### Step 4: Add DICOM Metadata (SDD)
+### Step 5: Add DICOM Metadata (SDD)
 
 **Purpose:** A crucial piece of metadata for accurate registration is the **Source-to-Detector Distance (SDD)**, which defines the geometry of the X-ray machine. This script embeds a specified SDD value directly into the DICOM file header.
 
