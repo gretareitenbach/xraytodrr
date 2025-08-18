@@ -82,7 +82,6 @@ def main():
     all_mae, all_ssim, all_ncc = [], [], []
     image_files = sorted(os.listdir(args.generated_dir))
     
-    # --- Select 3 random examples to visualize ---
     num_examples = 3
     if len(image_files) < num_examples:
         print(f"Warning: Found only {len(image_files)} images, visualizing all of them.")
@@ -116,8 +115,6 @@ def main():
             print(f"\nWarning: Skipping corrupted or truncated image file: {filename}. Error: {e}")
             continue
 
-
-    # --- Create the consolidated plot ---
     if plot_data:
         print(f"Generating consolidated plot: {args.output_filename}")
         
@@ -127,34 +124,28 @@ def main():
         
         column_titles = ["Real X-ray", "Ground-Truth DRR", "GAN-DRR", "Absolute Error", "Metrics"]
 
-        # Pre-calculate error maps to find a global color scale maximum
         error_maps = []
         for data in plot_data:
             target_size = data["generated"].size
             gt_resized = data["ground_truth"].resize(target_size, Image.Resampling.LANCZOS)
             error_map = np.abs(np.array(data["generated"], dtype=float) - np.array(gt_resized, dtype=float))
             error_maps.append(error_map)
-        
-        # Use the 99th percentile for robust color scaling, avoiding outlier skew
+
         global_vmax = np.percentile(np.array(error_maps), 99) if error_maps else 1.0
 
         for i, data in enumerate(plot_data):
             target_size = data["generated"].size
             input_img = data["input"].resize(target_size, Image.Resampling.LANCZOS)
             ground_truth_img = data["ground_truth"].resize(target_size, Image.Resampling.LANCZOS)
-            
-            # --- Create axes for the current row ---
+
             axes = [fig.add_subplot(gs[i, j]) for j in range(5)]
             
-            # --- Display images ---
             axes[0].imshow(input_img, cmap='gray')
             axes[1].imshow(ground_truth_img, cmap='gray')
             axes[2].imshow(data["generated"], cmap='gray')
             
-            # --- Display heatmap with the consistent color scale ---
             im = axes[3].imshow(error_maps[i], cmap='jet', vmin=0, vmax=global_vmax)
-            
-            # --- Display metrics in a text box ---
+
             metrics = data["metrics"]
             metrics_text = (f"MAE (↓): {metrics['mae']:.2f}\n"
                             f"SSIM (↑): {metrics['ssim']:.4f}\n"
@@ -162,7 +153,6 @@ def main():
             axes[4].text(0.5, 0.5, metrics_text, ha='center', va='center', fontsize=12,
                          bbox=dict(boxstyle="round,pad=0.5", fc='wheat', alpha=0.6))
 
-            # --- Set titles and turn off axes ---
             if i == 0:
                 for ax, title in zip(axes, column_titles):
                     ax.set_title(title, fontsize=14, pad=10)
@@ -171,21 +161,13 @@ def main():
                 ax.set_xticks([])
                 ax.set_yticks([])
 
-        # Adjust layout to prevent titles/labels from overlapping
         fig.tight_layout(h_pad=3)
-        
-        # Add a single, shared colorbar for all heatmaps
-        # Position: [left, bottom, width, height] in figure-relative coordinates
-        cbar_ax = fig.add_axes([0.65, 0.1, 0.015, 0.8]) 
-        cbar = fig.colorbar(im, cax=cbar_ax)
-        cbar.set_label('Absolute Pixel Difference', size=12)
 
         save_path = os.path.join(args.output_dir, args.output_filename)
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         plt.close(fig)
         print(f"✔️ Visualization saved to '{save_path}'")
 
-    # --- Print average metrics for the entire dataset ---
     if all_mae:
         print("\n--- Average Evaluation Results (Full Dataset) ---")
         print(f"Average MAE (L1): {np.mean(all_mae):.4f}")
