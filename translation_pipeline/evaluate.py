@@ -128,10 +128,10 @@ def main():
         for data in plot_data:
             target_size = data["generated"].size
             gt_resized = data["ground_truth"].resize(target_size, Image.Resampling.LANCZOS)
-            error_map = np.abs(np.array(data["generated"], dtype=float) - np.array(gt_resized, dtype=float))
+            error_map = np.abs(np.array(gt_resized, dtype=float) - np.array(data["generated"], dtype=float))
             error_maps.append(error_map)
 
-        global_vmax = np.percentile(np.array(error_maps), 99) if error_maps else 1.0
+        global_vmax = max(error_map.max() for error_map in error_maps) if error_maps else 1.0
 
         for i, data in enumerate(plot_data):
             target_size = data["generated"].size
