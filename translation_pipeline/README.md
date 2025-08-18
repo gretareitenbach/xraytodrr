@@ -97,3 +97,6 @@ python evaluate.py \
     --input_dir data/testing/xray \
     --output_dir evaluation_results \
 ```
+
+<img width="657" height="447" alt="comparison_plot" src="https://github.com/user-attachments/assets/f806e0a4-5bd3-4c3c-97ce-9b43b1affaf7" />
+
