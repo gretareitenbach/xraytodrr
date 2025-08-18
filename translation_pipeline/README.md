@@ -78,3 +78,22 @@ python predict.py \
     --output_dir /path/to/save/results \
     --checkpoint checkpoints/gen_epoch_190.pth.tar
 ```
+
+-----
+
+### Step 4: Evaluate Results
+
+**Purpose:** After creating the predicted GAN-DRRs, this script uses the ground truth registration DRRs, original x-rays, and predicted GAN-DRRs to evaluate the pix2pix model.
+
+**Script:** `evaluate.py`
+
+**Usage:**
+Specify the path to your input X-ray(s), GAN-DRRs, ground truth registration-DRRs, and optionally an output directory.
+
+```bash
+python evaluate.py \
+    --generated_dir results \
+    --ground_truth_dir data/testing/drr \
+    --input_dir data/testing/xray \
+    --output_dir evaluation_results \
+```
