@@ -37,7 +37,7 @@ python mirror_xrays.py \
 ```
 -----
 
-### Step 3: Co-Register Cropped X-Rays
+### Step 3: Co-Register Cropped X-Rays (Not Tested)
 
 **Purpose:** After cropping, each x-ray scan exists in its own coordinate space. This step aligns, or **co-registers**, all cropped x-ray scans to a common orientation and position. One scan is chosen as a `reference` (or fixed) image, and all other scans are transformed to match it.
 
